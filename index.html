@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>給妳的咖啡拉霸</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #241815;
+        --muted: #7b6257;
+        --cream: #fff8ec;
+        --foam: #fffdf8;
+        --coffee: #5d3022;
+        --espresso: #2e1712;
+        --caramel: #d79a4b;
+        --rose: #d75867;
+        --mint: #7dbfa5;
+        --line: rgba(46, 23, 18, 0.15);
+        --shadow: 0 28px 80px rgba(46, 23, 18, 0.22);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at 16% 18%, rgba(125, 191, 165, 0.24), transparent 30%),
+          radial-gradient(circle at 82% 10%, rgba(215, 154, 75, 0.28), transparent 30%),
+          linear-gradient(135deg, #fffaf0 0%, #f4dfbf 48%, #dba76d 100%);
+        color: var(--ink);
+        font-family: "Noto Sans TC", system-ui, sans-serif;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .page {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
+        gap: clamp(24px, 4vw, 58px);
+        align-items: center;
+        width: min(1180px, calc(100% - 32px));
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 40px 0;
+      }
+
+      .intro {
+        display: grid;
+        gap: 22px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        width: max-content;
+        max-width: 100%;
+        padding: 10px 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 253, 248, 0.72);
+        color: var(--coffee);
+        font-weight: 700;
+      }
+
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--coffee);
+        color: var(--cream);
+      }
+
+      h1 {
+        max-width: 620px;
+        margin: 0;
+        font-size: clamp(40px, 7vw, 82px);
+        line-height: 1.04;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 560px;
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(17px, 2vw, 21px);
+        line-height: 1.7;
+      }
+
+      .lead.is-changing {
+        animation: jokePop 0.45s ease;
+      }
+
+      @keyframes jokePop {
+        0% {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .details {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        max-width: 620px;
+      }
+
+      .detail {
+        min-height: 118px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 253, 248, 0.7);
+        backdrop-filter: blur(14px);
+      }
+
+      .detail strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--coffee);
+        font-size: 15px;
+      }
+
+      .detail span {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.45;
+      }
+
+      .machine-wrap {
+        display: grid;
+        place-items: center;
+      }
+
+      .machine {
+        position: relative;
+        width: min(100%, 520px);
+        padding: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.58);
+        border-radius: 28px;
+        background:
+          linear-gradient(160deg, rgba(255, 253, 248, 0.95), rgba(255, 237, 206, 0.9)),
+          var(--foam);
+        box-shadow: var(--shadow);
+      }
+
+      .machine::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        z-index: 0;
+        border: 2px solid rgba(93, 48, 34, 0.16);
+        border-radius: 20px;
+        pointer-events: none;
+      }
+
+      .machine > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .topbar {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+
+      .marquee {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 58px;
+        border-radius: 8px;
+        background: var(--espresso);
+        color: #ffe2a8;
+        font-size: clamp(17px, 3vw, 25px);
+        font-weight: 900;
+        text-align: center;
+        box-shadow: inset 0 -8px 18px rgba(0, 0, 0, 0.28);
+      }
+
+      .sound-button {
+        display: grid;
+        place-items: center;
+        width: 58px;
+        min-height: 58px;
+        border: 0;
+        border-radius: 8px;
+        background: rgba(93, 48, 34, 0.12);
+        color: var(--coffee);
+        cursor: pointer;
+        font-size: 22px;
+      }
+
+      .sound-button.is-on {
+        background: var(--mint);
+        color: #11362b;
+      }
+
+      .slots-shell {
+        padding: 18px;
+        border-radius: 18px;
+        background: linear-gradient(180deg, #6e3b28, #321712);
+        box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+      }
+
+      .slots {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .reel {
+        display: grid;
+        place-items: center;
+        aspect-ratio: 0.78;
+        min-height: 148px;
+        overflow: hidden;
+        border: 4px solid #f0cf92;
+        border-radius: 14px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 242, 218, 0.94)),
+          #fff7e8;
+        box-shadow: inset 0 8px 18px rgba(46, 23, 18, 0.14);
+      }
+
+      .symbol {
+        display: grid;
+        place-items: center;
+        width: 100%;
+        height: 100%;
+        font-size: clamp(54px, 9vw, 84px);
+        transition: transform 0.2s ease;
+      }
+
+      .spinning .symbol {
+        animation: spinBlur 0.18s linear infinite;
+      }
+
+      @keyframes spinBlur {
+        0% {
+          transform: translateY(-38%) scale(0.9);
+          filter: blur(1px);
+          opacity: 0.4;
+        }
+        50% {
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(38%) scale(0.9);
+          filter: blur(1px);
+          opacity: 0.4;
+        }
+      }
+
+      .controls {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .game {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+        padding: 14px;
+        border: 1px solid rgba(93, 48, 34, 0.16);
+        border-radius: 8px;
+        background: rgba(255, 253, 248, 0.72);
+      }
+
+      .game-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .game-title {
+        margin: 0;
+        color: var(--coffee);
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .game-score {
+        flex: 0 0 auto;
+        color: var(--espresso);
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .game-canvas {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1.8;
+        border: 3px solid #f0cf92;
+        border-radius: 8px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 246, 228, 0.96)),
+          #fff7e8;
+        cursor: none;
+      }
+
+      .game-actions {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .game-button {
+        min-height: 46px;
+        border: 0;
+        border-radius: 8px;
+        background: var(--coffee);
+        color: var(--cream);
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .game-hint {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .spin-row {
+        display: grid;
+        grid-template-columns: 1fr 62px;
+        gap: 10px;
+        align-items: stretch;
+      }
+
+      .spin-button {
+        min-height: 58px;
+        border: 0;
+        border-radius: 8px;
+        background: linear-gradient(180deg, #e45e6b, #b93242);
+        color: white;
+        font-size: 20px;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 0 12px 28px rgba(184, 50, 66, 0.3);
+      }
+
+      .spin-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.72;
+      }
+
+      .lever {
+        display: grid;
+        place-items: center;
+        min-height: 58px;
+        border: 0;
+        border-radius: 8px;
+        background: #2d1712;
+        cursor: pointer;
+      }
+
+      .lever span {
+        display: block;
+        width: 16px;
+        height: 42px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, #f6d892, #c77935);
+        transform-origin: top center;
+        transition: transform 0.18s ease;
+      }
+
+      .lever:active span,
+      .lever.pulled span {
+        transform: rotate(18deg) translateY(4px);
+      }
+
+      .status {
+        min-height: 26px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .coupon {
+        display: none;
+        margin-top: 16px;
+        padding: 18px;
+        border: 1px dashed rgba(93, 48, 34, 0.38);
+        border-radius: 8px;
+        background: #fffdf8;
+        text-align: center;
+      }
+
+      .coupon.show {
+        display: block;
+      }
+
+      .coupon small {
+        color: var(--muted);
+      }
+
+      .coupon-code {
+        display: block;
+        margin: 8px 0 6px;
+        color: var(--coffee);
+        font-size: clamp(24px, 5vw, 38px);
+        font-weight: 900;
+      }
+
+      .coupon-note {
+        display: block;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 22px;
+        z-index: 5;
+        width: min(420px, calc(100% - 32px));
+        padding: 14px 18px;
+        border-radius: 8px;
+        background: var(--espresso);
+        color: var(--cream);
+        text-align: center;
+        box-shadow: 0 18px 46px rgba(46, 23, 18, 0.28);
+        transform: translate(-50%, 120%);
+        opacity: 0;
+        transition: 0.25s ease;
+      }
+
+      .toast.show {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+
+      @media (max-width: 900px) {
+        .page {
+          grid-template-columns: 1fr;
+          align-items: start;
+          padding: 26px 0;
+        }
+
+        .details {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .machine {
+          padding: 16px;
+          border-radius: 22px;
+        }
+
+        .slots-shell {
+          padding: 12px;
+        }
+
+        .slots {
+          gap: 8px;
+        }
+
+        .reel {
+          min-height: 112px;
+          border-width: 3px;
+        }
+
+        .topbar,
+        .game-actions,
+        .spin-row {
+          grid-template-columns: 1fr;
+        }
+
+        .sound-button {
+          width: 100%;
+        }
+
+        .lever {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="intro" aria-labelledby="title">
+        <div class="brand">
+          <span class="brand-mark">☕</span>
+          <span>For Someone Special</span>
+        </div>
+        <h1 id="title">今天的咖啡，由拉霸決定。</h1>
+        <p class="lead" id="jokeText">
+          為什麼電紡絲研究生都很會等待？因為 Taylor cone 穩定前，人生也不能太躁。
+        </p>
+        <div class="details" aria-label="抽獎內容">
+          <div class="detail">
+            <strong>小獎池</strong>
+            <span>冰滴、拿鐵、美式、冷萃、摩卡、抹茶拿鐵和甜點加碼。</span>
+          </div>
+          <div class="detail">
+            <strong>前置任務</strong>
+            <span>先救回穩定 Taylor cone，拿到 80 分才會解鎖咖啡抽獎。</span>
+          </div>
+          <div class="detail">
+            <strong>音效</strong>
+            <span>右上角可以開關聲音，包含轉動、停格和中獎提示音。</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="machine-wrap" aria-label="咖啡拉霸機">
+        <div class="machine">
+          <div class="topbar">
+            <div class="marquee">COFFEE DATE SLOT</div>
+            <button class="sound-button is-on" id="soundButton" type="button" aria-label="切換音效">♪</button>
+          </div>
+          <div class="slots-shell">
+            <div class="slots">
+              <div class="reel"><div class="symbol" data-reel="0">☕</div></div>
+              <div class="reel"><div class="symbol" data-reel="1">🥐</div></div>
+              <div class="reel"><div class="symbol" data-reel="2">🍫</div></div>
+            </div>
+          </div>
+
+          <div class="game" aria-label="電紡絲小遊戲">
+            <div class="game-head">
+              <p class="game-title">救救 Taylor cone</p>
+              <span class="game-score" id="gameScore">0 / 80</span>
+            </div>
+            <canvas class="game-canvas" id="gameCanvas" width="640" height="356"></canvas>
+            <div class="game-actions">
+              <button class="game-button" id="gameButton" type="button">開始救實驗</button>
+              <p class="game-hint" id="gameHint">接住均勻奈米纖維 +10，避開 beads 和濕度爆表。左右移動收集板，80 分解鎖咖啡。</p>
+            </div>
+          </div>
+
+          <div class="controls">
+            <div class="spin-row">
+              <button class="spin-button" id="spinButton" type="button" disabled>先拿 80 分解鎖咖啡</button>
+              <button class="lever" id="lever" type="button" aria-label="拉下把手">
+                <span></span>
+              </button>
+            </div>
+            <p class="status" id="status">Taylor cone 還不穩，咖啡券暫時被 reviewer 2 鎖住。</p>
+          </div>
+
+          <div class="coupon" id="coupon" aria-live="polite">
+            <small>今天抽到</small>
+            <strong class="coupon-code" id="prizeTitle">拿鐵一杯</strong>
+            <span class="coupon-note" id="prizeNote">附帶條件：一起慢慢喝完。</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      const symbols = ["☕", "🥐", "🍫", "🍪", "🥤", "✨"];
+      const prizes = [
+        { title: "冰滴咖啡一杯", note: "慢慢滴出來的風味，適合慢慢靠近。", result: ["🥤", "☕", "✨"] },
+        { title: "拿鐵一杯", note: "奶泡要漂亮，聊天要慢慢來。", result: ["☕", "☕", "☕"] },
+        { title: "冰美式一杯", note: "清爽一點，適合一起散步。", result: ["🥤", "🥤", "🥤"] },
+        { title: "焦糖瑪奇朵一杯", note: "甜一點也沒關係，今天可以。", result: ["✨", "✨", "✨"] },
+        { title: "冷萃咖啡一杯", note: "適合午後，也適合多聊五分鐘。", result: ["☕", "🥤", "☕"] },
+        { title: "摩卡一杯", note: "咖啡加巧克力，剛剛好。", result: ["🍫", "☕", "🍫"] },
+        { title: "抹茶拿鐵一杯", note: "不是咖啡也可以，重點是一起喝。", result: ["✨", "🥤", "✨"] },
+        { title: "西西里咖啡一杯", note: "有檸檬香的那種，適合陽光好的下午。", result: ["🥤", "✨", "🥤"] },
+        { title: "咖啡加甜點", note: "這個比較犯規，但抽到就算數。", result: ["🥐", "☕", "🍪"] },
+      ];
+
+      const jokes = [
+        "為什麼電紡絲研究生都很會等待？因為 Taylor cone 穩定前，人生也不能太躁。",
+        "今天的纖維很均勻，均勻到我開始懷疑是不是忘了開高壓。",
+        "做電池最浪漫的事，就是容量衰退了，心意還沒有。",
+        "SEM 圖最像什麼？像命運。放大之後才發現全是 beads。",
+        "我的論文題目很長，因為樣品失敗的理由也很長。",
+        "電紡絲的三大玄學：濕度、距離，還有老闆剛好走進來。",
+        "為什麼研究生不怕拉霸？因為比起抽獎，抽到好看的 CV 曲線更難。",
+        "今天電壓很穩，唯一不穩的是我看到 EIS 圖的情緒。",
+        "如果咖啡是電解液，我希望這杯至少不要漏液。",
+        "Reviewer 2 說要補實驗，我說可以，先補一杯拿鐵。",
+        "纖維接得住，beads 躲得掉，畢業應該也只是時間問題吧？",
+        "電池循環跑了一晚，早上醒來第一件事不是看訊息，是看容量有沒有塌。",
+      ];
+
+      const gameCanvas = document.querySelector("#gameCanvas");
+      const gameContext = gameCanvas.getContext("2d");
+      const gameButton = document.querySelector("#gameButton");
+      const gameScore = document.querySelector("#gameScore");
+      const gameHint = document.querySelector("#gameHint");
+      const jokeText = document.querySelector("#jokeText");
+      const reels = [...document.querySelectorAll(".symbol")];
+      const spinButton = document.querySelector("#spinButton");
+      const lever = document.querySelector("#lever");
+      const soundButton = document.querySelector("#soundButton");
+      const statusText = document.querySelector("#status");
+      const coupon = document.querySelector("#coupon");
+      const prizeTitle = document.querySelector("#prizeTitle");
+      const prizeNote = document.querySelector("#prizeNote");
+      const toast = document.querySelector("#toast");
+
+      let isSpinning = false;
+      let soundOn = true;
+      let coffeeUnlocked = false;
+      let audioContext;
+      let gameRunning = false;
+      let gameAnimation;
+      let gameState = {
+        score: 0,
+        timeLeft: 22,
+        collectorX: 320,
+        items: [],
+        keys: new Set(),
+        lastTime: 0,
+        spawnTimer: 0,
+      };
+      let jokeIndex = 0;
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("show");
+        window.setTimeout(() => toast.classList.remove("show"), 2400);
+      }
+
+      function rotateJoke() {
+        jokeIndex = (jokeIndex + 1) % jokes.length;
+        jokeText.classList.remove("is-changing");
+        void jokeText.offsetWidth;
+        jokeText.textContent = jokes[jokeIndex];
+        jokeText.classList.add("is-changing");
+      }
+
+      function getAudioContext() {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        return audioContext;
+      }
+
+      function tone(frequency, duration, type = "sine", volume = 0.05, delay = 0) {
+        if (!soundOn) return;
+        const context = getAudioContext();
+        const start = context.currentTime + delay;
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, start);
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        oscillator.connect(gain);
+        gain.connect(context.destination);
+        oscillator.start(start);
+        oscillator.stop(start + duration + 0.03);
+      }
+
+      function playPullSound() {
+        tone(180, 0.08, "square", 0.035);
+        tone(120, 0.12, "sawtooth", 0.025, 0.08);
+      }
+
+      function playTickSound(index) {
+        tone(420 + index * 80, 0.07, "triangle", 0.04);
+      }
+
+      function playWinSound() {
+        tone(523, 0.11, "sine", 0.055);
+        tone(659, 0.11, "sine", 0.055, 0.12);
+        tone(784, 0.18, "sine", 0.06, 0.24);
+      }
+
+      function drawRoundedRect(x, y, width, height, radius) {
+        const r = Math.min(radius, width / 2, height / 2);
+        gameContext.beginPath();
+        gameContext.moveTo(x + r, y);
+        gameContext.lineTo(x + width - r, y);
+        gameContext.quadraticCurveTo(x + width, y, x + width, y + r);
+        gameContext.lineTo(x + width, y + height - r);
+        gameContext.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+        gameContext.lineTo(x + r, y + height);
+        gameContext.quadraticCurveTo(x, y + height, x, y + height - r);
+        gameContext.lineTo(x, y + r);
+        gameContext.quadraticCurveTo(x, y, x + r, y);
+        gameContext.fill();
+      }
+
+      function updateGameScore() {
+        gameScore.textContent = `${Math.max(0, gameState.score)} / 80`;
+      }
+
+      function drawGame(message = "讓 Taylor cone 穩住，咖啡才會解鎖") {
+        const width = gameCanvas.width;
+        const height = gameCanvas.height;
+        gameContext.clearRect(0, 0, width, height);
+
+        gameContext.fillStyle = "#fff7e8";
+        gameContext.fillRect(0, 0, width, height);
+
+        gameContext.strokeStyle = "rgba(93, 48, 34, 0.16)";
+        gameContext.lineWidth = 2;
+        for (let y = 38; y < height - 40; y += 42) {
+          gameContext.beginPath();
+          gameContext.moveTo(28, y);
+          gameContext.lineTo(width - 28, y);
+          gameContext.stroke();
+        }
+
+        gameContext.fillStyle = "#5d3022";
+        gameContext.beginPath();
+        gameContext.moveTo(width / 2 - 34, 24);
+        gameContext.lineTo(width / 2 + 34, 24);
+        gameContext.lineTo(width / 2 + 12, 76);
+        gameContext.lineTo(width / 2 - 12, 76);
+        gameContext.closePath();
+        gameContext.fill();
+
+        gameContext.fillStyle = "#d75867";
+        gameContext.beginPath();
+        gameContext.arc(width / 2, 92, 12, 0, Math.PI * 2);
+        gameContext.fill();
+
+        gameContext.strokeStyle = "#7dbfa5";
+        gameContext.lineWidth = 3;
+        gameContext.beginPath();
+        gameContext.moveTo(width / 2, 102);
+        gameContext.bezierCurveTo(width / 2 - 40, 150, width / 2 + 52, 194, gameState.collectorX, height - 76);
+        gameContext.stroke();
+
+        gameContext.font = "900 18px 'Noto Sans TC', sans-serif";
+        gameContext.textAlign = "left";
+        gameContext.fillStyle = "#5d3022";
+        gameContext.fillText(`時間 ${Math.ceil(gameState.timeLeft)}s`, 24, 32);
+
+        gameContext.textAlign = "right";
+        gameContext.fillText(`分數 ${Math.max(0, gameState.score)}`, width - 24, 32);
+
+        gameState.items.forEach((item) => {
+          gameContext.font = "900 32px 'Noto Sans TC', sans-serif";
+          gameContext.textAlign = "center";
+          gameContext.fillText(item.icon, item.x, item.y);
+          gameContext.font = "700 12px 'Noto Sans TC', sans-serif";
+          gameContext.fillStyle = item.good ? "#2f765f" : "#b93242";
+          gameContext.fillText(item.label, item.x, item.y + 22);
+          gameContext.fillStyle = "#5d3022";
+        });
+
+        gameContext.fillStyle = "#2e1712";
+        drawRoundedRect(gameState.collectorX - 64, height - 52, 128, 18, 9);
+        gameContext.fillStyle = "#f0cf92";
+        drawRoundedRect(gameState.collectorX - 50, height - 58, 100, 8, 4);
+
+        if (!gameRunning) {
+          gameContext.fillStyle = "rgba(255, 253, 248, 0.86)";
+          drawRoundedRect(76, 126, width - 152, 92, 8);
+          gameContext.fillStyle = "#2e1712";
+          gameContext.font = "900 20px 'Noto Sans TC', sans-serif";
+          gameContext.textAlign = "center";
+          gameContext.fillText(message, width / 2, 164);
+          gameContext.font = "500 14px 'Noto Sans TC', sans-serif";
+          gameContext.fillText("均勻纖維 +10，beads / 濕度 / reviewer 2 會扣分", width / 2, 192);
+        }
+      }
+
+      function spawnGameItem() {
+        const pool = [
+          { icon: "〰", label: "均勻纖維", value: 10, good: true },
+          { icon: "⚡", label: "電壓穩了", value: 8, good: true },
+          { icon: "●", label: "beads", value: -8, good: false },
+          { icon: "💧", label: "濕度爆表", value: -12, good: false },
+          { icon: "R2", label: "補實驗", value: -15, good: false },
+        ];
+        const item = pool[Math.floor(Math.random() * pool.length)];
+        gameState.items.push({
+          ...item,
+          x: 50 + Math.random() * (gameCanvas.width - 100),
+          y: 92,
+          speed: 110 + Math.random() * 90,
+        });
+      }
+
+      function unlockCoffee() {
+        coffeeUnlocked = true;
+        gameRunning = false;
+        window.cancelAnimationFrame(gameAnimation);
+        spinButton.disabled = false;
+        lever.disabled = false;
+        spinButton.textContent = "開始抽今天的咖啡";
+        statusText.textContent = "Taylor cone 穩了，咖啡券解鎖。";
+        gameButton.textContent = "已解鎖，再玩一次";
+        gameButton.disabled = false;
+        gameHint.textContent = "80 分達成，終於不是整片 beads。現在可以抽咖啡了。";
+        drawGame("80 分達成，咖啡券解鎖");
+        playWinSound();
+        showToast("咖啡拉霸已解鎖");
+      }
+
+      function finishGame() {
+        gameRunning = false;
+        window.cancelAnimationFrame(gameAnimation);
+        gameButton.disabled = false;
+        gameButton.textContent = "再救一次";
+        gameHint.textContent = "還沒 80 分，Taylor cone 又開始飄。再來一次。";
+        drawGame("差一點，這批纖維還要重做");
+        showToast("還沒達標，再試一次");
+      }
+
+      function gameLoop(time) {
+        if (!gameRunning) return;
+        const delta = Math.min((time - gameState.lastTime) / 1000, 0.033);
+        gameState.lastTime = time;
+        gameState.timeLeft -= delta;
+        gameState.spawnTimer -= delta;
+
+        if (gameState.keys.has("ArrowLeft")) gameState.collectorX -= 280 * delta;
+        if (gameState.keys.has("ArrowRight")) gameState.collectorX += 280 * delta;
+        gameState.collectorX = Math.max(70, Math.min(gameCanvas.width - 70, gameState.collectorX));
+
+        if (gameState.spawnTimer <= 0) {
+          spawnGameItem();
+          gameState.spawnTimer = 0.48 + Math.random() * 0.34;
+        }
+
+        gameState.items.forEach((item) => {
+          item.y += item.speed * delta;
+        });
+
+        gameState.items = gameState.items.filter((item) => {
+          const caught = item.y > gameCanvas.height - 70 && Math.abs(item.x - gameState.collectorX) < 70;
+          const missed = item.y > gameCanvas.height + 30;
+          if (caught) {
+            gameState.score = Math.max(0, gameState.score + item.value);
+            updateGameScore();
+            tone(item.good ? 760 : 180, 0.06, item.good ? "triangle" : "sawtooth", 0.035);
+            if (gameState.score >= 80) unlockCoffee();
+            return false;
+          }
+          return !missed;
+        });
+
+        if (!gameRunning) return;
+        drawGame();
+        if (gameRunning && gameState.timeLeft <= 0) {
+          finishGame();
+          return;
+        }
+        if (gameRunning) gameAnimation = window.requestAnimationFrame(gameLoop);
+      }
+
+      function startGame() {
+        gameRunning = true;
+        gameState = {
+          score: 0,
+          timeLeft: 22,
+          collectorX: 320,
+          items: [],
+          keys: gameState.keys,
+          lastTime: performance.now(),
+          spawnTimer: 0,
+        };
+        updateGameScore();
+        gameButton.disabled = true;
+        gameButton.textContent = "實驗進行中";
+        gameHint.textContent = "滑鼠、手指或鍵盤左右鍵都可以移動收集板。";
+        playPullSound();
+        gameAnimation = window.requestAnimationFrame(gameLoop);
+      }
+
+      function randomSymbol() {
+        return symbols[Math.floor(Math.random() * symbols.length)];
+      }
+
+      function randomPrize() {
+        return prizes[Math.floor(Math.random() * prizes.length)];
+      }
+
+      function setSpinning(active) {
+        document.querySelectorAll(".reel").forEach((reel) => reel.classList.toggle("spinning", active));
+        spinButton.disabled = active || !coffeeUnlocked;
+        lever.disabled = active || !coffeeUnlocked;
+        isSpinning = active;
+      }
+
+      async function spin() {
+        if (isSpinning) return;
+        if (!coffeeUnlocked) {
+          showToast("先在小遊戲拿到 80 分，才能抽咖啡。");
+          statusText.textContent = "先救 Taylor cone，再救今天的咖啡。";
+          return;
+        }
+
+        coupon.classList.remove("show");
+        lever.classList.add("pulled");
+        statusText.textContent = "轉動中... 今天的咖啡快出現了";
+        setSpinning(true);
+        playPullSound();
+
+        const timers = reels.map((reel, index) =>
+          window.setInterval(() => {
+            reel.textContent = randomSymbol();
+          }, 80 + index * 18),
+        );
+
+        const prize = randomPrize();
+        await new Promise((resolve) => window.setTimeout(resolve, 900));
+
+        reels.forEach((reel, index) => {
+          window.setTimeout(() => {
+            window.clearInterval(timers[index]);
+            reel.textContent = prize.result[index];
+            reel.closest(".reel").classList.remove("spinning");
+            playTickSound(index);
+
+            if (index === reels.length - 1) {
+              setSpinning(false);
+              lever.classList.remove("pulled");
+              prizeTitle.textContent = prize.title;
+              prizeNote.textContent = prize.note;
+              statusText.textContent = "抽到了，這杯要記得兌現。";
+              coupon.classList.add("show");
+              window.setTimeout(playWinSound, 120);
+              showToast(`今天是：${prize.title}`);
+            }
+          }, index * 520);
+        });
+      }
+
+      function toggleSound() {
+        soundOn = !soundOn;
+        soundButton.classList.toggle("is-on", soundOn);
+        soundButton.textContent = soundOn ? "♪" : "×";
+        showToast(soundOn ? "音效已開啟" : "音效已關閉");
+        if (soundOn) tone(660, 0.08, "sine", 0.04);
+      }
+
+      spinButton.addEventListener("click", spin);
+      lever.addEventListener("click", spin);
+      soundButton.addEventListener("click", toggleSound);
+      gameButton.addEventListener("click", startGame);
+
+      gameCanvas.addEventListener("pointermove", (event) => {
+        const rect = gameCanvas.getBoundingClientRect();
+        const ratio = gameCanvas.width / rect.width;
+        gameState.collectorX = Math.max(70, Math.min(gameCanvas.width - 70, (event.clientX - rect.left) * ratio));
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight") gameState.keys.add(event.key);
+      });
+
+      window.addEventListener("keyup", (event) => {
+        gameState.keys.delete(event.key);
+      });
+
+      lever.disabled = true;
+      drawGame();
+      window.setInterval(rotateJoke, 10000);
+    </script>
+  </body>
+</html>

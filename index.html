@@ -105,6 +105,26 @@
         animation: jokePop 0.45s ease;
       }
 
+      .joke-tip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        width: fit-content;
+        max-width: 560px;
+        padding: 10px 12px;
+        border: 1px solid rgba(93, 48, 34, 0.16);
+        border-radius: 8px;
+        background: rgba(255, 253, 248, 0.76);
+        color: var(--coffee);
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.45;
+      }
+
+      .joke-tip span {
+        font-size: 18px;
+      }
+
       @keyframes jokePop {
         0% {
           opacity: 0;
@@ -322,6 +342,8 @@
           linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 246, 228, 0.96)),
           #fff7e8;
         cursor: none;
+        touch-action: none;
+        user-select: none;
       }
 
       .game-actions {
@@ -497,6 +519,10 @@
           grid-template-columns: 1fr;
         }
 
+        .game-canvas {
+          aspect-ratio: 1.35;
+        }
+
         .sound-button {
           width: 100%;
         }
@@ -511,17 +537,21 @@
     <main class="page">
       <section class="intro" aria-labelledby="title">
         <div class="brand">
-          <span class="brand-mark">☕</span>
-          <span>For Someone Special</span>
+          <span class="brand-mark">🐧</span>
+          <span>For Yin 🐧</span>
         </div>
         <h1 id="title">今天的咖啡，由拉霸決定。</h1>
         <p class="lead" id="jokeText">
           為什麼電紡絲研究生都很會等待？因為 Taylor cone 穩定前，人生也不能太躁。
         </p>
+        <div class="joke-tip">
+          <span>↑</span>
+          <strong>上面每 10 秒會換一則研究生冷笑話，等 Taylor cone 的時候可以看一下。</strong>
+        </div>
         <div class="details" aria-label="抽獎內容">
           <div class="detail">
             <strong>小獎池</strong>
-            <span>冰滴、拿鐵、美式、冷萃、摩卡、抹茶拿鐵和甜點加碼。</span>
+            <span>冰滴、拿鐵、美式、冷萃、摩卡、西西里咖啡和甜點加碼。</span>
           </div>
           <div class="detail">
             <strong>前置任務</strong>
@@ -556,7 +586,7 @@
             <canvas class="game-canvas" id="gameCanvas" width="640" height="356"></canvas>
             <div class="game-actions">
               <button class="game-button" id="gameButton" type="button">開始救實驗</button>
-              <p class="game-hint" id="gameHint">接住均勻奈米纖維 +10，避開 beads 和濕度爆表。左右移動收集板，80 分解鎖咖啡。</p>
+              <p class="game-hint" id="gameHint">手機用手指按住遊戲區左右滑。接住均勻奈米纖維 +10，避開 beads 和濕度爆表，80 分解鎖咖啡。</p>
             </div>
           </div>
 
@@ -590,7 +620,7 @@
         { title: "焦糖瑪奇朵一杯", note: "甜一點也沒關係，今天可以。", result: ["✨", "✨", "✨"] },
         { title: "冷萃咖啡一杯", note: "適合午後，也適合多聊五分鐘。", result: ["☕", "🥤", "☕"] },
         { title: "摩卡一杯", note: "咖啡加巧克力，剛剛好。", result: ["🍫", "☕", "🍫"] },
-        { title: "抹茶拿鐵一杯", note: "不是咖啡也可以，重點是一起喝。", result: ["✨", "🥤", "✨"] },
+        { title: "拿鐵一杯", note: "再抽到拿鐵也不奇怪，因為拿鐵本來就很適合一起喝。", result: ["✨", "🥤", "✨"] },
         { title: "西西里咖啡一杯", note: "有檸檬香的那種，適合陽光好的下午。", result: ["🥤", "✨", "🥤"] },
         { title: "咖啡加甜點", note: "這個比較犯規，但抽到就算數。", result: ["🥐", "☕", "🍪"] },
       ];
@@ -636,6 +666,7 @@
         score: 0,
         timeLeft: 22,
         collectorX: 320,
+        targetX: 320,
         items: [],
         keys: new Set(),
         lastTime: 0,
@@ -694,6 +725,24 @@
         tone(523, 0.11, "sine", 0.055);
         tone(659, 0.11, "sine", 0.055, 0.12);
         tone(784, 0.18, "sine", 0.06, 0.24);
+      }
+
+      function isTouchPlay() {
+        return window.matchMedia("(pointer: coarse)").matches || window.innerWidth <= 620;
+      }
+
+      function mobileValue(desktopValue, touchValue) {
+        return isTouchPlay() ? touchValue : desktopValue;
+      }
+
+      function clampCollector(value) {
+        return Math.max(70, Math.min(gameCanvas.width - 70, value));
+      }
+
+      function setCollectorTarget(clientX) {
+        const rect = gameCanvas.getBoundingClientRect();
+        const ratio = gameCanvas.width / rect.width;
+        gameState.targetX = clampCollector((clientX - rect.left) * ratio);
       }
 
       function drawRoundedRect(x, y, width, height, radius) {
@@ -771,10 +820,12 @@
           gameContext.fillStyle = "#5d3022";
         });
 
+        const collectorWidth = mobileValue(128, 158);
+        const collectorTop = mobileValue(100, 124);
         gameContext.fillStyle = "#2e1712";
-        drawRoundedRect(gameState.collectorX - 64, height - 52, 128, 18, 9);
+        drawRoundedRect(gameState.collectorX - collectorWidth / 2, height - 52, collectorWidth, 18, 9);
         gameContext.fillStyle = "#f0cf92";
-        drawRoundedRect(gameState.collectorX - 50, height - 58, 100, 8, 4);
+        drawRoundedRect(gameState.collectorX - collectorTop / 2, height - 58, collectorTop, 8, 4);
 
         if (!gameRunning) {
           gameContext.fillStyle = "rgba(255, 253, 248, 0.86)";
@@ -801,7 +852,7 @@
           ...item,
           x: 50 + Math.random() * (gameCanvas.width - 100),
           y: 92,
-          speed: 110 + Math.random() * 90,
+          speed: mobileValue(110, 88) + Math.random() * mobileValue(90, 66),
         });
       }
 
@@ -838,13 +889,16 @@
         gameState.timeLeft -= delta;
         gameState.spawnTimer -= delta;
 
-        if (gameState.keys.has("ArrowLeft")) gameState.collectorX -= 280 * delta;
-        if (gameState.keys.has("ArrowRight")) gameState.collectorX += 280 * delta;
-        gameState.collectorX = Math.max(70, Math.min(gameCanvas.width - 70, gameState.collectorX));
+        if (gameState.keys.has("ArrowLeft")) gameState.targetX -= mobileValue(300, 360) * delta;
+        if (gameState.keys.has("ArrowRight")) gameState.targetX += mobileValue(300, 360) * delta;
+        gameState.targetX = clampCollector(gameState.targetX);
+        const follow = mobileValue(16, 22);
+        gameState.collectorX += (gameState.targetX - gameState.collectorX) * Math.min(1, follow * delta);
+        gameState.collectorX = clampCollector(gameState.collectorX);
 
         if (gameState.spawnTimer <= 0) {
           spawnGameItem();
-          gameState.spawnTimer = 0.48 + Math.random() * 0.34;
+          gameState.spawnTimer = mobileValue(0.48, 0.58) + Math.random() * mobileValue(0.34, 0.42);
         }
 
         gameState.items.forEach((item) => {
@@ -852,7 +906,9 @@
         });
 
         gameState.items = gameState.items.filter((item) => {
-          const caught = item.y > gameCanvas.height - 70 && Math.abs(item.x - gameState.collectorX) < 70;
+          const caught =
+            item.y > gameCanvas.height - mobileValue(70, 82) &&
+            Math.abs(item.x - gameState.collectorX) < mobileValue(74, 98);
           const missed = item.y > gameCanvas.height + 30;
           if (caught) {
             gameState.score = Math.max(0, gameState.score + item.value);
@@ -877,8 +933,9 @@
         gameRunning = true;
         gameState = {
           score: 0,
-          timeLeft: 22,
+          timeLeft: mobileValue(22, 28),
           collectorX: 320,
+          targetX: 320,
           items: [],
           keys: gameState.keys,
           lastTime: performance.now(),
@@ -887,7 +944,9 @@
         updateGameScore();
         gameButton.disabled = true;
         gameButton.textContent = "實驗進行中";
-        gameHint.textContent = "滑鼠、手指或鍵盤左右鍵都可以移動收集板。";
+        gameHint.textContent = isTouchPlay()
+          ? "手指按住遊戲區左右滑，收集板會跟著你走。"
+          : "滑鼠、手指或鍵盤左右鍵都可以移動收集板。";
         playPullSound();
         gameAnimation = window.requestAnimationFrame(gameLoop);
       }
@@ -964,10 +1023,20 @@
       soundButton.addEventListener("click", toggleSound);
       gameButton.addEventListener("click", startGame);
 
+      gameCanvas.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        gameCanvas.setPointerCapture?.(event.pointerId);
+        setCollectorTarget(event.clientX);
+        gameState.collectorX = gameState.targetX;
+      });
+
       gameCanvas.addEventListener("pointermove", (event) => {
-        const rect = gameCanvas.getBoundingClientRect();
-        const ratio = gameCanvas.width / rect.width;
-        gameState.collectorX = Math.max(70, Math.min(gameCanvas.width - 70, (event.clientX - rect.left) * ratio));
+        event.preventDefault();
+        setCollectorTarget(event.clientX);
+      });
+
+      gameCanvas.addEventListener("pointercancel", () => {
+        gameState.keys.clear();
       });
 
       window.addEventListener("keydown", (event) => {
@@ -984,3 +1053,49 @@
     </script>
   </body>
 </html>
+
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
+
+const root = __dirname;
+const port = 8000;
+
+const types = {
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".svg": "image/svg+xml",
+};
+
+http
+  .createServer((request, response) => {
+    const urlPath = decodeURIComponent(request.url.split("?")[0]);
+    const requested = urlPath === "/" ? "/index.html" : urlPath;
+    const filePath = path.join(root, requested);
+
+    if (!filePath.startsWith(root)) {
+      response.writeHead(403);
+      response.end("Forbidden");
+      return;
+    }
+
+    fs.readFile(filePath, (error, data) => {
+      if (error) {
+        response.writeHead(404);
+        response.end("Not found");
+        return;
+      }
+
+      response.writeHead(200, {
+        "Content-Type": types[path.extname(filePath)] || "application/octet-stream",
+      });
+      response.end(data);
+    });
+  })
+  .listen(port, "127.0.0.1", () => {
+    console.log(`Coffee draw site: http://127.0.0.1:${port}`);
+  });

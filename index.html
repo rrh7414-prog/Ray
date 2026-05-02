@@ -88,9 +88,32 @@
       h1 {
         max-width: 620px;
         margin: 0;
-        font-size: clamp(40px, 7vw, 82px);
-        line-height: 1.04;
+        font-size: clamp(38px, 6.6vw, 76px);
+        line-height: 1.08;
         letter-spacing: 0;
+      }
+
+      .title-soft {
+        display: block;
+        color: var(--ink);
+      }
+
+      .title-coffee {
+        display: inline-block;
+        background: linear-gradient(100deg, #5d3022 0%, #b36d36 38%, #f0bd62 72%, #7dbfa5 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 14px 34px rgba(93, 48, 34, 0.16);
+      }
+
+      .title-heart {
+        display: inline-block;
+        background: linear-gradient(100deg, #d75867 0%, #b36d36 46%, #5d3022 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 14px 34px rgba(215, 88, 103, 0.16);
       }
 
       .lead {
@@ -173,23 +196,40 @@
       .machine {
         position: relative;
         width: min(100%, 520px);
-        padding: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.58);
-        border-radius: 28px;
+        padding: 26px 26px 30px;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 30px 30px 24px 24px;
         background:
-          linear-gradient(160deg, rgba(255, 253, 248, 0.95), rgba(255, 237, 206, 0.9)),
+          radial-gradient(circle at 22% 10%, rgba(255, 255, 255, 0.92), transparent 30%),
+          linear-gradient(160deg, rgba(255, 253, 248, 0.96), rgba(255, 226, 179, 0.92) 48%, rgba(189, 119, 65, 0.9)),
           var(--foam);
-        box-shadow: var(--shadow);
+        box-shadow:
+          var(--shadow),
+          inset 0 0 0 8px rgba(255, 253, 248, 0.26),
+          inset 0 -18px 35px rgba(93, 48, 34, 0.16);
       }
 
       .machine::before {
         content: "";
         position: absolute;
-        inset: 14px;
+        inset: 14px 14px 18px;
         z-index: 0;
-        border: 2px solid rgba(93, 48, 34, 0.16);
-        border-radius: 20px;
+        border: 2px solid rgba(93, 48, 34, 0.2);
+        border-radius: 22px 22px 16px 16px;
         pointer-events: none;
+      }
+
+      .machine::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: -18px;
+        width: 72%;
+        height: 30px;
+        border-radius: 0 0 22px 22px;
+        background: linear-gradient(180deg, #6e3b28, #321712);
+        box-shadow: 0 18px 28px rgba(46, 23, 18, 0.22);
+        transform: translateX(-50%);
       }
 
       .machine > * {
@@ -206,17 +246,46 @@
       }
 
       .marquee {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 58px;
-        border-radius: 8px;
-        background: var(--espresso);
+        min-height: 64px;
+        border: 3px solid #f0cf92;
+        border-radius: 14px;
+        background:
+          linear-gradient(180deg, rgba(255, 226, 168, 0.1), transparent),
+          var(--espresso);
         color: #ffe2a8;
         font-size: clamp(17px, 3vw, 25px);
         font-weight: 900;
         text-align: center;
-        box-shadow: inset 0 -8px 18px rgba(0, 0, 0, 0.28);
+        box-shadow:
+          inset 0 -8px 18px rgba(0, 0, 0, 0.28),
+          0 10px 20px rgba(46, 23, 18, 0.12);
+      }
+
+      .marquee::before,
+      .marquee::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ffe2a8;
+        box-shadow:
+          0 -18px 0 #f2c16d,
+          0 18px 0 #f2c16d;
+        transform: translateY(-50%);
+      }
+
+      .marquee::before {
+        left: 12px;
+      }
+
+      .marquee::after {
+        right: 12px;
       }
 
       .sound-button {
@@ -225,8 +294,8 @@
         width: 58px;
         min-height: 58px;
         border: 0;
-        border-radius: 8px;
-        background: rgba(93, 48, 34, 0.12);
+        border-radius: 14px;
+        background: rgba(255, 253, 248, 0.62);
         color: var(--coffee);
         cursor: pointer;
         font-size: 22px;
@@ -238,10 +307,27 @@
       }
 
       .slots-shell {
-        padding: 18px;
-        border-radius: 18px;
-        background: linear-gradient(180deg, #6e3b28, #321712);
-        box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+        position: relative;
+        padding: 24px 18px 20px;
+        border: 3px solid #f0cf92;
+        border-radius: 22px;
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.12), transparent 18%, transparent 82%, rgba(255, 255, 255, 0.12)),
+          linear-gradient(180deg, #7a422c, #321712);
+        box-shadow:
+          inset 0 0 0 2px rgba(255, 255, 255, 0.12),
+          0 16px 30px rgba(46, 23, 18, 0.18);
+      }
+
+      .slots-shell::before {
+        content: "";
+        position: absolute;
+        inset: 10px 14px auto;
+        height: 8px;
+        border-radius: 999px;
+        background:
+          radial-gradient(circle, #fff5c9 0 34%, transparent 36%) 0 0 / 34px 8px repeat-x;
+        opacity: 0.95;
       }
 
       .slots {
@@ -256,12 +342,16 @@
         aspect-ratio: 0.78;
         min-height: 148px;
         overflow: hidden;
-        border: 4px solid #f0cf92;
-        border-radius: 14px;
+        border: 5px solid #f0cf92;
+        border-radius: 16px;
         background:
+          linear-gradient(90deg, rgba(46, 23, 18, 0.08), transparent 18%, transparent 82%, rgba(46, 23, 18, 0.08)),
           linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 242, 218, 0.94)),
           #fff7e8;
-        box-shadow: inset 0 8px 18px rgba(46, 23, 18, 0.14);
+        box-shadow:
+          inset 0 8px 18px rgba(46, 23, 18, 0.14),
+          inset 0 -10px 16px rgba(215, 154, 75, 0.2),
+          0 8px 16px rgba(46, 23, 18, 0.2);
       }
 
       .symbol {
@@ -298,7 +388,11 @@
       .controls {
         display: grid;
         gap: 12px;
-        margin-top: 18px;
+        margin-top: 20px;
+        padding: 14px;
+        border: 1px solid rgba(93, 48, 34, 0.14);
+        border-radius: 14px;
+        background: rgba(255, 253, 248, 0.48);
       }
 
       .game {
@@ -380,7 +474,7 @@
       .spin-button {
         min-height: 58px;
         border: 0;
-        border-radius: 8px;
+        border-radius: 14px;
         background: linear-gradient(180deg, #e45e6b, #b93242);
         color: white;
         font-size: 20px;
@@ -399,19 +493,35 @@
         place-items: center;
         min-height: 58px;
         border: 0;
-        border-radius: 8px;
-        background: #2d1712;
+        border-radius: 14px;
+        background:
+          radial-gradient(circle at 50% 18%, #fff2c7 0 12%, transparent 13%),
+          #2d1712;
         cursor: pointer;
       }
 
       .lever span {
         display: block;
+        position: relative;
         width: 16px;
-        height: 42px;
+        height: 44px;
         border-radius: 999px;
         background: linear-gradient(180deg, #f6d892, #c77935);
         transform-origin: top center;
         transition: transform 0.18s ease;
+      }
+
+      .lever span::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: -8px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, #fff3cf, #d75867 38%, #8f2530);
+        box-shadow: 0 6px 12px rgba(46, 23, 18, 0.28);
+        transform: translateX(-50%);
       }
 
       .lever:active span,
@@ -482,6 +592,101 @@
         opacity: 1;
       }
 
+      .mission-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background:
+          radial-gradient(circle at 50% 42%, rgba(215, 154, 75, 0.22), transparent 32%),
+          rgba(20, 10, 8, 0.92);
+        color: #fff8ec;
+        transition: opacity 0.45s ease, visibility 0.45s ease;
+      }
+
+      .mission-overlay.is-hidden {
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .mission-card {
+        display: grid;
+        gap: 18px;
+        width: min(560px, 100%);
+        padding: clamp(24px, 6vw, 42px);
+        border: 1px solid rgba(240, 207, 146, 0.48);
+        border-radius: 10px;
+        background:
+          linear-gradient(180deg, rgba(46, 23, 18, 0.92), rgba(20, 10, 8, 0.94)),
+          #2e1712;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+        text-align: center;
+      }
+
+      .mission-kicker {
+        color: #f0cf92;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0.18em;
+      }
+
+      .mission-title {
+        min-height: 86px;
+        margin: 0;
+        font-size: clamp(34px, 8vw, 64px);
+        font-weight: 900;
+        line-height: 1.08;
+      }
+
+      .mission-title.is-fading {
+        animation: missionFade 0.42s ease forwards;
+      }
+
+      @keyframes missionFade {
+        to {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+      }
+
+      .mission-copy {
+        margin: 0;
+        color: rgba(255, 248, 236, 0.78);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      .mission-start {
+        min-height: 52px;
+        border: 0;
+        border-radius: 8px;
+        background: linear-gradient(180deg, #f2c16d, #c77935);
+        color: #2e1712;
+        font-size: 18px;
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .mission-cursor::after {
+        content: "";
+        display: inline-block;
+        width: 0.1em;
+        height: 0.9em;
+        margin-left: 0.08em;
+        background: #f0cf92;
+        animation: cursorBlink 0.7s steps(2) infinite;
+        vertical-align: -0.04em;
+      }
+
+      @keyframes cursorBlink {
+        50% {
+          opacity: 0;
+        }
+      }
+
       @media (max-width: 900px) {
         .page {
           grid-template-columns: 1fr;
@@ -520,7 +725,8 @@
         }
 
         .game-canvas {
-          aspect-ratio: 1.35;
+          aspect-ratio: 1.15;
+          min-height: 260px;
         }
 
         .sound-button {
@@ -534,13 +740,24 @@
     </style>
   </head>
   <body>
+    <div class="mission-overlay" id="missionOverlay">
+      <div class="mission-card">
+        <div class="mission-kicker">MISSION BRIEFING</div>
+        <h2 class="mission-title mission-cursor" id="missionText">任務說明</h2>
+        <p class="mission-copy" id="missionCopy">救回穩定 Taylor cone，拿到 80 分，解鎖今天的咖啡拉霸。</p>
+        <button class="mission-start" id="missionStart" type="button">Start mission</button>
+      </div>
+    </div>
     <main class="page">
       <section class="intro" aria-labelledby="title">
         <div class="brand">
           <span class="brand-mark">🐧</span>
           <span>For Yin 🐧</span>
         </div>
-        <h1 id="title">今天的咖啡，由拉霸決定。</h1>
+        <h1 id="title">
+          <span class="title-soft">一杯<span class="title-coffee">咖啡</span>的機率，</span>
+          <span class="title-heart">也是一點心意</span>
+        </h1>
         <p class="lead" id="jokeText">
           為什麼電紡絲研究生都很會等待？因為 Taylor cone 穩定前，人生也不能太躁。
         </p>
@@ -559,7 +776,7 @@
           </div>
           <div class="detail">
             <strong>音效</strong>
-            <span>右上角可以開關聲音，包含轉動、停格和中獎提示音。</span>
+            <span>右上角可以開關聲音，包含背景音樂、轉動、停格和中獎提示音。</span>
           </div>
         </div>
       </section>
@@ -573,7 +790,7 @@
           <div class="slots-shell">
             <div class="slots">
               <div class="reel"><div class="symbol" data-reel="0">☕</div></div>
-              <div class="reel"><div class="symbol" data-reel="1">🥐</div></div>
+              <div class="reel"><div class="symbol" data-reel="1">🐧</div></div>
               <div class="reel"><div class="symbol" data-reel="2">🍫</div></div>
             </div>
           </div>
@@ -597,7 +814,7 @@
                 <span></span>
               </button>
             </div>
-            <p class="status" id="status">Taylor cone 還不穩，咖啡券暫時被 reviewer 2 鎖住。</p>
+            <p class="status" id="status">Taylor cone 還不穩，咖啡券暫時被老闆補實驗鎖住。</p>
           </div>
 
           <div class="coupon" id="coupon" aria-live="polite">
@@ -609,10 +826,12 @@
       </section>
     </main>
 
+    <audio id="backgroundMusic" src="assets/background-music.mp4" preload="auto" loop></audio>
+    <audio id="typewriterClick" src="assets/typewriter-click.mp4" preload="auto"></audio>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
-      const symbols = ["☕", "🥐", "🍫", "🍪", "🥤", "✨"];
+      const symbols = ["☕", "🐧", "🍫", "🍪", "🥤", "✨", "🍷"];
       const prizes = [
         { title: "冰滴咖啡一杯", note: "慢慢滴出來的風味，適合慢慢靠近。", result: ["🥤", "☕", "✨"] },
         { title: "拿鐵一杯", note: "奶泡要漂亮，聊天要慢慢來。", result: ["☕", "☕", "☕"] },
@@ -622,7 +841,7 @@
         { title: "摩卡一杯", note: "咖啡加巧克力，剛剛好。", result: ["🍫", "☕", "🍫"] },
         { title: "拿鐵一杯", note: "再抽到拿鐵也不奇怪，因為拿鐵本來就很適合一起喝。", result: ["✨", "🥤", "✨"] },
         { title: "西西里咖啡一杯", note: "有檸檬香的那種，適合陽光好的下午。", result: ["🥤", "✨", "🥤"] },
-        { title: "咖啡加甜點", note: "這個比較犯規，但抽到就算數。", result: ["🥐", "☕", "🍪"] },
+        { title: "咖啡加甜點", note: "這個比較犯規，但抽到就算數。", result: ["🐧", "☕", "🍪"] },
       ];
 
       const jokes = [
@@ -635,9 +854,19 @@
         "為什麼研究生不怕拉霸？因為比起抽獎，抽到好看的 CV 曲線更難。",
         "今天電壓很穩，唯一不穩的是我看到 EIS 圖的情緒。",
         "如果咖啡是電解液，我希望這杯至少不要漏液。",
-        "Reviewer 2 說要補實驗，我說可以，先補一杯拿鐵。",
+        "老闆說要補實驗，我說可以，先補一杯拿鐵。",
         "纖維接得住，beads 躲得掉，畢業應該也只是時間問題吧？",
         "電池循環跑了一晚，早上醒來第一件事不是看訊息，是看容量有沒有塌。",
+        "我以為今天會出好樣品，結果只有咖啡因成功沉積在我的血液裡。",
+        "電紡絲最像感情的地方：距離太近不行，太遠也不行。",
+        "容量保持率很感人，因為我看完真的想哭。",
+        "如果 Taylor cone 穩定了，請順便幫我把人生也穩一下。",
+        "這條纖維很細，細到像我跟畢業之間的希望。",
+        "我問電池為什麼衰退，它說它也想下班。",
+        "今天不是沒進度，只是進度被包在 amorphous 裡看不出來。",
+        "beads 出現的頻率，比我收到好消息的頻率還高。",
+        "手套箱裡最缺的不是氬氣，是研究生的睡眠。",
+        "如果這次倍率性能好看，我願意相信拉霸機也會中獎。",
       ];
 
       const gameCanvas = document.querySelector("#gameCanvas");
@@ -655,16 +884,24 @@
       const prizeTitle = document.querySelector("#prizeTitle");
       const prizeNote = document.querySelector("#prizeNote");
       const toast = document.querySelector("#toast");
+      const backgroundMusic = document.querySelector("#backgroundMusic");
+      const typewriterClick = document.querySelector("#typewriterClick");
+      const missionOverlay = document.querySelector("#missionOverlay");
+      const missionText = document.querySelector("#missionText");
+      const missionCopy = document.querySelector("#missionCopy");
+      const missionStart = document.querySelector("#missionStart");
 
       let isSpinning = false;
       let soundOn = true;
+      let musicStarted = false;
       let coffeeUnlocked = false;
       let audioContext;
+      let typewriterLineAudio;
       let gameRunning = false;
       let gameAnimation;
       let gameState = {
         score: 0,
-        timeLeft: 22,
+        timeLeft: 45,
         collectorX: 320,
         targetX: 320,
         items: [],
@@ -672,7 +909,7 @@
         lastTime: 0,
         spawnTimer: 0,
       };
-      let jokeIndex = 0;
+      let jokeIndex = Math.floor(Math.random() * jokes.length);
 
       function showToast(message) {
         toast.textContent = message;
@@ -686,6 +923,10 @@
         void jokeText.offsetWidth;
         jokeText.textContent = jokes[jokeIndex];
         jokeText.classList.add("is-changing");
+      }
+
+      function initRandomJoke() {
+        jokeText.textContent = jokes[jokeIndex];
       }
 
       function getAudioContext() {
@@ -727,6 +968,95 @@
         tone(784, 0.18, "sine", 0.06, 0.24);
       }
 
+      function delay(ms) {
+        return new Promise((resolve) => window.setTimeout(resolve, ms));
+      }
+
+      function stopTypewriterLineSound() {
+        if (!typewriterLineAudio) return;
+        typewriterLineAudio.pause();
+        typewriterLineAudio.currentTime = 0;
+        typewriterLineAudio = undefined;
+      }
+
+      function playTypewriterLineSound(startOffset = 0) {
+        if (!soundOn) return;
+        stopTypewriterLineSound();
+        typewriterLineAudio = typewriterClick.cloneNode();
+        typewriterLineAudio.volume = 0.42;
+        typewriterLineAudio.currentTime = startOffset;
+        typewriterLineAudio.play().catch(() => {});
+      }
+
+      function getTypewriterDuration() {
+        if (Number.isFinite(typewriterClick.duration) && typewriterClick.duration > 0.2) {
+          return Math.min(typewriterClick.duration, 2.8);
+        }
+        return 1.8;
+      }
+
+      async function typeMissionLine(line, startOffset = 0) {
+        missionText.classList.remove("is-fading");
+        missionText.textContent = "";
+        playTypewriterLineSound(startOffset);
+        const visibleChars = Math.max(1, [...line].filter((char) => char !== " ").length);
+        const totalTypingMs = Math.max(650, (getTypewriterDuration() - startOffset) * 1000);
+        const perCharDelay = Math.max(42, Math.min(150, totalTypingMs / visibleChars));
+        for (const char of line) {
+          missionText.textContent += char;
+          await delay(char === " " ? perCharDelay * 0.45 : perCharDelay);
+        }
+        stopTypewriterLineSound();
+      }
+
+      async function fadeMissionLine() {
+        await delay(620);
+        missionText.classList.add("is-fading");
+        await delay(430);
+        missionText.classList.remove("is-fading");
+      }
+
+      async function runMissionIntro() {
+        missionStart.disabled = true;
+        missionStart.style.display = "none";
+        missionCopy.textContent = "";
+        typewriterClick.load();
+        if (!Number.isFinite(typewriterClick.duration) || typewriterClick.duration <= 0) {
+          await new Promise((resolve) => {
+            typewriterClick.addEventListener("loadedmetadata", resolve, { once: true });
+            window.setTimeout(resolve, 700);
+          });
+        }
+        if (audioContext?.state === "suspended") await audioContext.resume();
+        startBackgroundMusic();
+        const lines = [
+          { text: "Your mission is....", audioStart: 0 },
+          { text: "Win the game", audioStart: 0.42 },
+          { text: "Good luck", audioStart: 0.52 },
+        ];
+        for (const line of lines) {
+          await typeMissionLine(line.text, line.audioStart);
+          await fadeMissionLine();
+        }
+        missionOverlay.classList.add("is-hidden");
+      }
+
+      function startBackgroundMusic() {
+        if (musicStarted || !soundOn) return;
+        musicStarted = true;
+        backgroundMusic.muted = false;
+        backgroundMusic.volume = 0.35;
+        backgroundMusic.play().catch(() => {
+          musicStarted = false;
+          showToast("點一下音效按鈕就能開背景音樂。");
+        });
+      }
+
+      function stopBackgroundMusic() {
+        backgroundMusic.pause();
+        musicStarted = false;
+      }
+
       function isTouchPlay() {
         return window.matchMedia("(pointer: coarse)").matches || window.innerWidth <= 620;
       }
@@ -743,6 +1073,22 @@
         const rect = gameCanvas.getBoundingClientRect();
         const ratio = gameCanvas.width / rect.width;
         gameState.targetX = clampCollector((clientX - rect.left) * ratio);
+      }
+
+      function centerCollector() {
+        gameState.collectorX = gameCanvas.width / 2;
+        gameState.targetX = gameCanvas.width / 2;
+      }
+
+      function resizeGameCanvas() {
+        const rect = gameCanvas.getBoundingClientRect();
+        const width = Math.round(rect.width) || 640;
+        const height = Math.round(rect.height) || 356;
+        if (gameCanvas.width === width && gameCanvas.height === height) return;
+        gameCanvas.width = width;
+        gameCanvas.height = height;
+        centerCollector();
+        if (!gameRunning) drawGame();
       }
 
       function drawRoundedRect(x, y, width, height, radius) {
@@ -835,7 +1181,7 @@
           gameContext.textAlign = "center";
           gameContext.fillText(message, width / 2, 164);
           gameContext.font = "500 14px 'Noto Sans TC', sans-serif";
-          gameContext.fillText("均勻纖維 +10，beads / 濕度 / reviewer 2 會扣分", width / 2, 192);
+          gameContext.fillText("均勻纖維 +10，beads / 濕度 / 老闆補實驗會扣分", width / 2, 192);
         }
       }
 
@@ -845,7 +1191,7 @@
           { icon: "⚡", label: "電壓穩了", value: 8, good: true },
           { icon: "●", label: "beads", value: -8, good: false },
           { icon: "💧", label: "濕度爆表", value: -12, good: false },
-          { icon: "R2", label: "補實驗", value: -15, good: false },
+          { icon: "補", label: "老闆補實驗", value: -15, good: false },
         ];
         const item = pool[Math.floor(Math.random() * pool.length)];
         gameState.items.push({
@@ -930,12 +1276,13 @@
       }
 
       function startGame() {
+        startBackgroundMusic();
         gameRunning = true;
         gameState = {
           score: 0,
-          timeLeft: mobileValue(22, 28),
-          collectorX: 320,
-          targetX: 320,
+          timeLeft: 45,
+          collectorX: gameCanvas.width / 2,
+          targetX: gameCanvas.width / 2,
           items: [],
           keys: gameState.keys,
           lastTime: performance.now(),
@@ -968,6 +1315,7 @@
 
       async function spin() {
         if (isSpinning) return;
+        startBackgroundMusic();
         if (!coffeeUnlocked) {
           showToast("先在小遊戲拿到 80 分，才能抽咖啡。");
           statusText.textContent = "先救 Taylor cone，再救今天的咖啡。";
@@ -1014,14 +1362,21 @@
         soundOn = !soundOn;
         soundButton.classList.toggle("is-on", soundOn);
         soundButton.textContent = soundOn ? "♪" : "×";
-        showToast(soundOn ? "音效已開啟" : "音效已關閉");
-        if (soundOn) tone(660, 0.08, "sine", 0.04);
+        if (soundOn) {
+          showToast("音樂與音效已開啟");
+          tone(660, 0.08, "sine", 0.04);
+          startBackgroundMusic();
+        } else {
+          showToast("音樂與音效已關閉");
+          stopBackgroundMusic();
+        }
       }
 
       spinButton.addEventListener("click", spin);
       lever.addEventListener("click", spin);
       soundButton.addEventListener("click", toggleSound);
       gameButton.addEventListener("click", startGame);
+      missionStart.addEventListener("click", runMissionIntro);
 
       gameCanvas.addEventListener("pointerdown", (event) => {
         event.preventDefault();
@@ -1048,7 +1403,10 @@
       });
 
       lever.disabled = true;
+      resizeGameCanvas();
       drawGame();
+      window.addEventListener("resize", resizeGameCanvas);
+      initRandomJoke();
       window.setInterval(rotateJoke, 10000);
     </script>
   </body>

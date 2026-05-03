@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>妳的限定咖啡</title>
+    <title>你的限定咖啡</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -549,6 +549,7 @@
 
       .coupon.show {
         display: block;
+        animation: couponWin 0.72s cubic-bezier(0.18, 0.9, 0.24, 1.22);
       }
 
       .coupon small {
@@ -568,6 +569,108 @@
         color: var(--muted);
         font-size: 14px;
         line-height: 1.55;
+      }
+
+      .machine.is-winning {
+        animation: machineWinPulse 0.9s ease both;
+      }
+
+      .win-burst {
+        position: fixed;
+        inset: 0;
+        z-index: 12;
+        overflow: hidden;
+        pointer-events: none;
+        opacity: 0;
+      }
+
+      .win-burst.show {
+        opacity: 1;
+      }
+
+      .win-burst::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 50% 44%, rgba(255, 242, 186, 0.58), transparent 20%),
+          radial-gradient(circle at 50% 46%, rgba(215, 88, 103, 0.18), transparent 34%);
+        animation: winFlash 0.72s ease both;
+      }
+
+      .win-burst span {
+        position: absolute;
+        left: 50%;
+        top: 47%;
+        width: 10px;
+        height: 16px;
+        border-radius: 2px;
+        background: var(--piece-color, #f0cf92);
+        transform: translate(-50%, -50%) rotate(var(--piece-rotate, 0deg));
+        animation: confettiPop 1.15s cubic-bezier(0.12, 0.86, 0.22, 1) forwards;
+      }
+
+      @keyframes couponWin {
+        0% {
+          opacity: 0;
+          transform: translateY(16px) scale(0.86) rotate(-1deg);
+        }
+        58% {
+          transform: translateY(-8px) scale(1.06) rotate(1deg);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(0);
+        }
+      }
+
+      @keyframes machineWinPulse {
+        0%,
+        100% {
+          box-shadow:
+            var(--shadow),
+            inset 0 0 0 8px rgba(255, 253, 248, 0.26),
+            inset 0 -18px 35px rgba(93, 48, 34, 0.16);
+        }
+        38% {
+          transform: translateY(-4px) scale(1.02);
+          box-shadow:
+            0 34px 92px rgba(215, 88, 103, 0.32),
+            0 0 0 10px rgba(240, 207, 146, 0.32),
+            inset 0 0 0 8px rgba(255, 253, 248, 0.34),
+            inset 0 -18px 35px rgba(93, 48, 34, 0.16);
+        }
+      }
+
+      @keyframes winFlash {
+        0%,
+        100% {
+          opacity: 0;
+        }
+        18%,
+        54% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes confettiPop {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.35) rotate(var(--piece-rotate, 0deg));
+        }
+        16% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform:
+            translate(
+              calc(-50% + var(--piece-x, 0px)),
+              calc(-50% + var(--piece-y, 0px))
+            )
+            scale(1)
+            rotate(calc(var(--piece-rotate, 0deg) + 260deg));
+        }
       }
 
       .toast {
@@ -828,6 +931,7 @@
 
     <audio id="backgroundMusic" src="background-music.mp4" preload="auto" loop></audio>
     <audio id="typewriterClick" src="typewriter-click.mp4" preload="auto"></audio>
+    <div class="win-burst" id="winBurst" aria-hidden="true"></div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
@@ -876,6 +980,7 @@
       const gameHint = document.querySelector("#gameHint");
       const jokeText = document.querySelector("#jokeText");
       const reels = [...document.querySelectorAll(".symbol")];
+      const machine = document.querySelector(".machine");
       const spinButton = document.querySelector("#spinButton");
       const lever = document.querySelector("#lever");
       const soundButton = document.querySelector("#soundButton");
@@ -884,6 +989,7 @@
       const prizeTitle = document.querySelector("#prizeTitle");
       const prizeNote = document.querySelector("#prizeNote");
       const toast = document.querySelector("#toast");
+      const winBurst = document.querySelector("#winBurst");
       const backgroundMusic = document.querySelector("#backgroundMusic");
       const typewriterClick = document.querySelector("#typewriterClick");
       const missionOverlay = document.querySelector("#missionOverlay");
@@ -963,9 +1069,39 @@
       }
 
       function playWinSound() {
-        tone(523, 0.11, "sine", 0.055);
-        tone(659, 0.11, "sine", 0.055, 0.12);
-        tone(784, 0.18, "sine", 0.06, 0.24);
+        tone(392, 0.09, "triangle", 0.05);
+        tone(523, 0.12, "sine", 0.065, 0.08);
+        tone(659, 0.12, "sine", 0.065, 0.18);
+        tone(784, 0.18, "sine", 0.07, 0.3);
+        tone(1046, 0.26, "triangle", 0.055, 0.44);
+        tone(132, 0.18, "sawtooth", 0.025, 0.04);
+      }
+
+      function celebrateWin() {
+        const colors = ["#f0cf92", "#d75867", "#7dbfa5", "#fff8ec", "#5d3022"];
+        winBurst.innerHTML = "";
+        machine.classList.remove("is-winning");
+        void machine.offsetWidth;
+        machine.classList.add("is-winning");
+
+        for (let index = 0; index < 34; index += 1) {
+          const piece = document.createElement("span");
+          const angle = (Math.PI * 2 * index) / 34;
+          const distance = 120 + Math.random() * 190;
+          piece.style.setProperty("--piece-x", `${Math.cos(angle) * distance}px`);
+          piece.style.setProperty("--piece-y", `${Math.sin(angle) * distance - 80}px`);
+          piece.style.setProperty("--piece-rotate", `${Math.random() * 180}deg`);
+          piece.style.setProperty("--piece-color", colors[index % colors.length]);
+          piece.style.animationDelay = `${Math.random() * 0.12}s`;
+          winBurst.appendChild(piece);
+        }
+
+        winBurst.classList.add("show");
+        window.setTimeout(() => {
+          winBurst.classList.remove("show");
+          machine.classList.remove("is-winning");
+          winBurst.innerHTML = "";
+        }, 1300);
       }
 
       function delay(ms) {
@@ -1166,8 +1302,8 @@
           gameContext.fillStyle = "#5d3022";
         });
 
-        const collectorWidth = mobileValue(128, 158);
-        const collectorTop = mobileValue(100, 124);
+        const collectorWidth = mobileValue(112, 126);
+        const collectorTop = mobileValue(86, 96);
         gameContext.fillStyle = "#2e1712";
         drawRoundedRect(gameState.collectorX - collectorWidth / 2, height - 52, collectorWidth, 18, 9);
         gameContext.fillStyle = "#f0cf92";
@@ -1254,7 +1390,7 @@
         gameState.items = gameState.items.filter((item) => {
           const caught =
             item.y > gameCanvas.height - mobileValue(70, 82) &&
-            Math.abs(item.x - gameState.collectorX) < mobileValue(74, 98);
+            Math.abs(item.x - gameState.collectorX) < mobileValue(68, 84);
           const missed = item.y > gameCanvas.height + 30;
           if (caught) {
             gameState.score = Math.max(0, gameState.score + item.value);
@@ -1351,7 +1487,8 @@
               prizeNote.textContent = prize.note;
               statusText.textContent = "抽到了，這杯要記得兌現。";
               coupon.classList.add("show");
-              window.setTimeout(playWinSound, 120);
+              celebrateWin();
+              window.setTimeout(playWinSound, 80);
               showToast(`今天是：${prize.title}`);
             }
           }, index * 520);

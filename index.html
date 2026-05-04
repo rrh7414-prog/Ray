@@ -828,8 +828,8 @@
         }
 
         .game-canvas {
-          aspect-ratio: 1.15;
-          min-height: 260px;
+          aspect-ratio: 0.92;
+          min-height: 340px;
         }
 
         .sound-button {
@@ -1334,7 +1334,7 @@
           ...item,
           x: 50 + Math.random() * (gameCanvas.width - 100),
           y: 92,
-          speed: mobileValue(110, 88) + Math.random() * mobileValue(90, 66),
+          speed: mobileValue(92, 68) + Math.random() * mobileValue(70, 48),
         });
       }
 
@@ -1380,7 +1380,7 @@
 
         if (gameState.spawnTimer <= 0) {
           spawnGameItem();
-          gameState.spawnTimer = mobileValue(0.48, 0.58) + Math.random() * mobileValue(0.34, 0.42);
+          gameState.spawnTimer = mobileValue(0.72, 0.85) + Math.random() * mobileValue(0.42, 0.5);
         }
 
         gameState.items.forEach((item) => {
